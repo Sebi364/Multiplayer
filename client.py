@@ -21,14 +21,11 @@ pos_Y = 500
 screen = pygame.display.set_mode((width, height))
 pygame.display.flip()
 
-
-
-
 def put(data):
-    client_socket.send(f"{data}\n".encode())
+    UDPClientSocket.sendto(data, ("127.0.0.1", 5001))
 
 def get():
-    data = client_socket.recv(1024).decode()
+    data = UDPClientSocket.recvfrom(1024)
     return data
 
 def draw_players():
@@ -58,12 +55,7 @@ def update_own_position(event):
     if event.key == pygame.K_s:
         pos_Y += 20
 
-try:
-    client_socket = socket.socket()
-    client_socket.connect((host, port))
-
-except:
-    quit()
+UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 
 put(f"add_player {PlayerID} {pos_X} {pos_Y} {PlayerColor}")
