@@ -22,25 +22,7 @@ def remove_player(player):
     del Players[player]
     print(f"Player {player} left the Game")
 
-def talk_to_client(conn):
-    while True:
-        data = conn.recv(1024).decode()
-        data = data.split("\n")
-        for d in data:
-            d = d.split(" ")
-            if d[0] == 'add_player':
-                add_player(d[1],d[2],d[3],d[4])
-
-            if d[0] == 'get_players':
-                get_players(conn)
-
-            if d[0] == 'update_player':
-                update_player(d[1] ,d[2], d[3])
-
-            if d[0] == 'remove_player':
-                remove_player(d[1])
-
-def talk_to_client2(conn,address):
+def talk_to_client(conn,address):
     data = conn.split("\n")
     for d in data:
         d = d.split(" ")
@@ -71,7 +53,7 @@ def server_program():
     while True:
         Message, address = server_socket.recvfrom(1024)
 
-        talk_to_client2(Message.decode(),address)
+        talk_to_client(Message.decode(),address)
 
 threading._start_new_thread( claner, ( ) )
 host = '127.0.0.1'

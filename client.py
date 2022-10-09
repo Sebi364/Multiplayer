@@ -22,15 +22,14 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.flip()
 
 def put(data):
-    UDPClientSocket.sendto(data, ("127.0.0.1", 5001))
+    client_socket.sendto(str(data).encode(), ("172.104.159.86", 5001))
 
 def get():
-    data = UDPClientSocket.recvfrom(1024)
+    data = client_socket.recvfrom(1024)[0].decode()
     return data
 
 def draw_players():
     put('get_players')
-
     string = ""
     while True:
         players = get()
@@ -42,6 +41,7 @@ def draw_players():
         x = x.split(" ")
         if x[0] != 'end':
             pygame.draw.circle(screen, x[3], [int(x[1]),int(x[2])], 50)
+
 
 def update_own_position(event):
     global pos_X, pos_Y
@@ -55,7 +55,7 @@ def update_own_position(event):
     if event.key == pygame.K_s:
         pos_Y += 20
 
-UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 
 put(f"add_player {PlayerID} {pos_X} {pos_Y} {PlayerColor}")
