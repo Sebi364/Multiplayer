@@ -6,7 +6,7 @@ import time
 players = []
 colors = ['red','blue','green','magenta','yellow','white','purple']
 
-host = '170.187.189.225'
+host = '127.0.0.1'
 port = 5001
 running = True
 
@@ -44,7 +44,6 @@ def draw_players():
     for x in string:
         x = x.split(" ")
         if x[0] != 'end':
-            print(x)
             pygame.draw.circle(screen, 'white', [int(x[1]),int(x[2])], 50)
 
 def update_own_position(event):
@@ -58,7 +57,6 @@ def update_own_position(event):
         pos_Y += 20
     if event.key == pygame.K_DOWN:
         pos_Y -= 20
-    put(f"update_player {PlayerID} {pos_X} {pos_Y}")
 
 try:
     client_socket = socket.socket()
@@ -79,3 +77,4 @@ while running:
             running = False
         if event.type == pygame.KEYDOWN:
             update_own_position(event)
+    put(f"update_player {PlayerID} {pos_X} {pos_Y}")

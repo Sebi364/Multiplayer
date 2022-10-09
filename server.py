@@ -1,5 +1,6 @@
 import socket
 import threading
+import time
 
 Players = {
 
@@ -7,7 +8,7 @@ Players = {
 
 def add_player(ID,pos_X,pos_Y):
     print(f"Player {ID} joined the Game")
-    Players[ID] = [pos_X, pos_Y]
+    Players[ID] = [pos_X, pos_Y, str(int(time.time()))]
 
 def get_players(conn):
     for (player, pos) in Players.items():
@@ -15,7 +16,7 @@ def get_players(conn):
     conn.send('end'.encode())
 
 def update_player(player, pos_X, pos_Y):
-    Players[player] = (pos_X, pos_Y)
+    Players[player] = [pos_X, pos_Y, str(int(time.time()))]
 
 def remove_player(player):
     del Players[player]
@@ -25,7 +26,6 @@ def talk_to_client(conn):
     while True:
         data = conn.recv(1024).decode()
         data = data.split("\n")
-        print(data)
         for d in data:
             d = d.split(" ")
             if d[0] == 'add_player':
@@ -39,6 +39,17 @@ def talk_to_client(conn):
         
             if d[0] == 'remove_player':
                 remove_player(d[1])
+
+def claner():
+    global Players
+    while True:
+        for (player, pos) in Players.items():
+            if int(int(time.time()) - int(pos[2])) > 10:
+                print(f"Player {player} was removed due to inactivity")
+                del Players[player]
+                break
+        time.sleep(5)
+
 
 def server_program():
     host = '127.0.0.1'
@@ -54,4 +65,5 @@ def server_program():
 
     conn.close()
 
+threading._start_new_thread( claner, ( ) )
 server_program()
