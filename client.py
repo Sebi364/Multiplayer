@@ -48,15 +48,15 @@ def draw_players():
 
 def update_own_position(event):
     global pos_X, pos_Y
-    if event.key == pygame.K_LEFT:
+    if event.key == pygame.K_a:
         pos_X -= 20
-    if event.key == pygame.K_RIGHT:
+    if event.key == pygame.K_d:
         pos_X += 20
 
-    if event.key == pygame.K_UP:
-        pos_Y += 20
-    if event.key == pygame.K_DOWN:
+    if event.key == pygame.K_w:
         pos_Y -= 20
+    if event.key == pygame.K_s:
+        pos_Y += 20
 
 try:
     client_socket = socket.socket()
