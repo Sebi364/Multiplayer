@@ -22,6 +22,9 @@ def remove_player(player):
     del Players[player]
     print(f"Player {player} left the Game")
 
+def ping(conn):
+    conn.send('response'.encode())
+
 def talk_to_client(conn):
     while True:
         data = conn.recv(1024).decode()
@@ -39,6 +42,9 @@ def talk_to_client(conn):
 
             if d[0] == 'remove_player':
                 remove_player(d[1])
+            if d[0] == 'ping':
+                ping(conn)
+
 
 def claner():
     global Players
