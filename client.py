@@ -6,7 +6,7 @@ import time
 players = []
 colors = ['red','blue','green','magenta','yellow','white','purple']
 
-host = '192.168.184.225'
+host = '127.0.0.1'
 port = 5001
 running = True
 
@@ -21,15 +21,19 @@ pos_Y = 500
 screen = pygame.display.set_mode((width, height))
 pygame.display.flip()
 
+
+
+
 def put(data):
-    client_socket.sendto(str(data).encode(), ("172.104.159.86", 5001))
+    client_socket.send(f"{data}\n".encode())
 
 def get():
-    data = client_socket.recvfrom(1024)[0].decode()
+    data = client_socket.recv(1024).decode()
     return data
 
 def draw_players():
     put('get_players')
+
     string = ""
     while True:
         players = get()
@@ -41,7 +45,6 @@ def draw_players():
         x = x.split(" ")
         if x[0] != 'end':
             pygame.draw.circle(screen, x[3], [int(x[1]),int(x[2])], 50)
-
 
 def update_own_position(event):
     global pos_X, pos_Y
@@ -55,7 +58,12 @@ def update_own_position(event):
     if event.key == pygame.K_s:
         pos_Y += 20
 
-client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+try:
+    client_socket = socket.socket()
+    client_socket.connect((host, port))
+
+except:
+    quit()
 
 
 put(f"add_player {PlayerID} {pos_X} {pos_Y} {PlayerColor}")
