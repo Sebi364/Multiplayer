@@ -6,7 +6,9 @@ from datetime import datetime
 players = []
 colors = ['red','blue','green','magenta','yellow','white','purple']
 
-host = '127.0.0.1'
+#host = '172.104.159.86' #for testing on server
+host = '127.0.0.1' #for testing localy
+
 port = 5001
 running = True
 
