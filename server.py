@@ -52,7 +52,7 @@ def claner():
 
 
 def server_program():
-    host = '127.0.0.1'
+    host = ''
     port = 5001
 
     server_socket = socket.socket()
