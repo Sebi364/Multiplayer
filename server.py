@@ -52,11 +52,11 @@ def claner():
 def server_program():
     while True:
         Message, address = server_socket.recvfrom(1024)
-
-        talk_to_client(Message.decode(),address)
+        print("a player connected")
+        threading._start_new_thread(talk_to_client, (Message.decode(),address))
 
 threading._start_new_thread( claner, ( ) )
-host = '127.0.0.1'
+host = ''
 port = 5001
 
 server_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)

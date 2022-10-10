@@ -6,7 +6,7 @@ import time
 players = []
 colors = ['red','blue','green','magenta','yellow','white','purple']
 
-host = '127.0.0.1'
+host = '192.168.184.225'
 port = 5001
 running = True
 
