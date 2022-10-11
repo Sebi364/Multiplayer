@@ -2,28 +2,37 @@ import socket
 import threading
 import time
 
+mutex = threading.Lock()
 Players = {
 
 }
 
 def add_player(ID,pos_X,pos_Y,Color):
     print(f"Player {ID} joined the Game")
+    mutex.acquire()
     Players[ID] = [pos_X, pos_Y, str(int(time.time())), Color]
+    mutex.release()
 
 def get_players(conn):
+    mutex.acquire()
     for (player, pos) in Players.items():
         conn.send(f"{player} {pos[0]} {pos[1]} {pos[3]}\n".encode())
+    mutex.release()
     conn.send('end'.encode())
 
 def update_player(player, pos_X, pos_Y):
+    mutex.acquire()
     Players[player] = [pos_X, pos_Y, str(int(time.time())), Players[player][-1]]
+    mutex.release()
 
 def remove_player(player):
+    mutex.acquire()
     del Players[player]
+    mutex.release()
     print(f"Player {player} left the Game")
 
 def ping(conn):
-    conn.send('response'.encode())
+    conn.send('response\n'.encode())
 
 def talk_to_client(conn):
     while True:
@@ -52,8 +61,9 @@ def claner():
         for (player, pos) in Players.items():
             if int(int(time.time()) - int(pos[2])) > 10:
                 print(f"Player {player} was removed due to inactivity")
+                mutex.acquire()
                 del Players[player]
-                break
+                mutex.release()
         time.sleep(5)
 
 
@@ -67,7 +77,7 @@ def server_program():
         server_socket.listen(2)
         conn, address = server_socket.accept()
 
-        threading._start_new_thread( talk_to_client, (conn, ) )
+        threading._start_new_thread(talk_to_client,(conn,))
 
     conn.close()
 

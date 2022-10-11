@@ -3,6 +3,8 @@ import random
 import socket
 import time
 from datetime import datetime
+import threading
+
 players = []
 colors = ['red','blue','green','magenta','yellow','white','purple']
 
@@ -49,12 +51,13 @@ def draw_players():
             pygame.draw.circle(screen, x[3], [int(x[1]),int(x[2])], 50)
 
 def ping():
-    put('ping')
-    v1 = datetime.now()
-    x = get()
-    v2 = datetime.now()
-    delta = v2 - v1
-    print(int(delta.total_seconds() * 1000))
+    while True:
+        put('ping')
+        v1 = datetime.now()
+        x = get()
+        v2 = datetime.now()
+        delta = v2 - v1
+        #print(f"Ping: {int(delta.total_seconds() * 1000)}")
 
 def update_own_position(event):
     global pos_X, pos_Y
@@ -75,13 +78,13 @@ try:
 except:
     quit()
 
+#threading._start_new_thread(ping,())
 
 put(f"add_player {PlayerID} {pos_X} {pos_Y} {PlayerColor}")
 
 while running:
     screen.fill((0,0,0))
     draw_players()
-    ping()
     pygame.display.update()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
