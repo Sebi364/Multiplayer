@@ -60,11 +60,17 @@ def talk_to_client(conn):
 def claner():
     global Players
     while True:
-        for (player, pos) in Players.items():
+        mutex.acquire()
+        list = copy(Players)
+        mutex.release()
+        for (player, pos) in list.items():
             if int(int(time.time()) - int(pos[2])) > 10:
                 print(f"Player {player} was removed due to inactivity")
                 mutex.acquire()
-                del Players[player]
+                try:
+                    del Players[player]
+                except:
+                    pass
                 mutex.release()
         time.sleep(5)
 
