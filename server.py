@@ -1,6 +1,7 @@
 import socket
 import threading
 import time
+from copy import copy
 
 mutex = threading.Lock()
 Players = {
@@ -15,9 +16,10 @@ def add_player(ID,pos_X,pos_Y,Color):
 
 def get_players(conn):
     mutex.acquire()
-    for (player, pos) in Players.items():
-        conn.send(f"{player} {pos[0]} {pos[1]} {pos[3]}\n".encode())
+    list = copy(Players)
     mutex.release()
+    for (player, pos) in list.items():
+        conn.send(f"{player} {pos[0]} {pos[1]} {pos[3]}\n".encode())
     conn.send('end'.encode())
 
 def update_player(player, pos_X, pos_Y):
